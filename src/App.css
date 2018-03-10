@@ -1,0 +1,48 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/*This is horrible, change to two blocks please*/
+div#Stats {
+  width: 70%;
+  margin: 0 auto 4px auto;
+  padding: 1em;
+}
+div#Nums {
+  width: 63%;
+  margin: 0 auto 4px auto;
+  padding: 1em;
+}
+
+span.left {
+  font-weight: bold;
+  float: left;
+}
+
+span.right {
+  float: right;
+}
