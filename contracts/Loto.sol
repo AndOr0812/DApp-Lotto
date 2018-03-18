@@ -33,15 +33,11 @@ contract Loto is usingOraclize {
     //DEPRECATE
     event RoundStarted(uint256 closingBlock);
 
-    function Loto() public {
+    function Loto(address escrow_) public {
         owner = msg.sender;
         currentState = RoundState.noGame;
-        //OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
-    }
-
-    //DEPRECATED, SHOULD BE SET ONCE ON DEPLOYING IN CONSTRUCTOR
-    function setEscrow(address _escrow) ownerOnly public {
-        escrow = _escrow;
+        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+        escrow = escrow_;
     }
 
     function roundStart() public ownerOnly {
@@ -66,7 +62,6 @@ contract Loto is usingOraclize {
                 //event maxUserReached(...);
             }
             if(ticketsN == 3) {
-                //ALL YOU HAD TO DO WAS TO START THE DAMN TIMER CJ
                 setTimer();
             }
     }
@@ -85,20 +80,19 @@ contract Loto is usingOraclize {
         } else {
             winnerN = parseInt(_result);
             rewardClaimable[tickets[winnerN]] = true;
-            //CALCULATE REWARD, 10% - escrow, 2% - ours
+            //10% - escrow, 2% - ours
             reward = ticketsN * 44 finney;
         }
     }
 
     function setTimer() private {
-        //Move to server side, could be better
+        //This could be implemented on server side
         currentState = RoundState.timerStarted;
-        oraclize_query(20/*864000*/,"WolframAlpha","5 + 3", gas);
+        oraclize_query(20/*864000*/,"WolframAlpha","1 + 3", gas);
     }
     //Pull over push goes here
     function withdraw() public {
         //JUST LET HIM TAKE MONEY, JACKPOT SEPARATELLY
-        //Looks bad
         require(msg.sender == tickets[winnerN]);
         require(rewardClaimable[msg.sender] == true);
         rewardClaimable[msg.sender] = false;

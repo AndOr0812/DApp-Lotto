@@ -18,7 +18,8 @@ class App extends Component {
       disabled: true,
       date: new Date(),
       ticketsN: 0,
-      timer: false
+      timer: false,
+      withdraw: false
     }
     this.sendMoney = this.sendMoney.bind(this);
   }
@@ -55,7 +56,8 @@ class App extends Component {
     });
     Loto.deployed().then((instance) => {return instance.ticketsN.call();}).then((value) => {
       that.setState({ ticketsN: value.toNumber()})});
-      Loto.deployed().then((instance) => {
+      Loto.deployed()
+        .then((instance) => {
         return instance.currentState.call();
       }).then((value) => {
         this.setState({ timer: value.toNumber() == 2 ? true : false })
@@ -107,30 +109,6 @@ class App extends Component {
         Loto.deployed().then((instance) => {return instance.withdraw({from: web3.eth.accounts[0]});});
   }
 
-  handleCh(e) {
-    let tit = e.target.value;
-    var pat = /\d+/;
-    console.log(tit.search(pat));
-    e.target.value = tit.match(pat) + " ETH";
-  }
-
-  tick() {
-    //dafug it's not gonna work man
-    //web3.eth.getBlock('latest', (error, result) => { if(!error) console.log(result.number)})
-    /*for (var i = 0; i < result.logs.length; i++) {
-      var log = result.logs[i];
-  
-      if (log.event == "RoundStarted") {
-        // We found the event!
-        break;
-      }
-    }*/
-
-    this.setState({
-      date: new Date()
-    });
-  }
-
   render() {
     return (
       <div className="App">
@@ -146,7 +124,7 @@ class App extends Component {
         <pre><button disabled={this.state.disabled} onClick={this.sendMoney}>Enter round!</button></pre>
 	      <pre><button onClick={this.check}>Check whats going on!</button></pre>
         <pre><label>If you appear to be the winner</label></pre>
-        <pre><button onClick={this.withdraw}>Withdraw!</button></pre>
+        <pre><button disabled={this.state.withdraw} onClick={this.withdraw}>Withdraw!</button></pre>
         </p>
         <div id="Stats">
         <span className="left">Number of users</span>
@@ -160,12 +138,5 @@ class App extends Component {
     );
   }
 }
-
-//Check on refresh if user is the winner 
-//by checking his address == winnerN.address????
-//MultiSig
-//How to overload contract
-//Demonstrate out-of-gas when iterating
-
 
 export default App;

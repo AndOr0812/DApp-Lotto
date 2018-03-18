@@ -14,13 +14,13 @@ development: {
       port: 9545,
       network_id: "8" // Match any network id
     },
-    /*ropsten: {
-      provider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infura_apikey),
+    ropsten: {
+      //rovider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infura_apikey),
       network_id: 3
     },
 kovan: {
-      provider: new HDWalletProvider(mnemonic2, "https://kovan.infura.io/"+infura_apikey),
+      //provider: new HDWalletProvider(mnemonic2, "https://kovan.infura.io/"+infura_apikey),
       network_id: 42
-    },*/
+    },
 }
 };
