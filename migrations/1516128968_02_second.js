@@ -8,7 +8,4 @@ module.exports = function(deployer) {
   .then(function() {
     return deployer.deploy(Loto,MultiSig.address,{gas: 4612388,from: "0x627306090abab3a6e1400e9345bc60c78a8bef57"});
   });
-  //deployer.deploy(Loto,'0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef',{gas: 4612388,from: "0x627306090abab3a6e1400e9345bc60c78a8bef57"});
-  //HERE GOES ARGUMENTS FOR BOTH LOTO AND MULTISIG
-
 };
