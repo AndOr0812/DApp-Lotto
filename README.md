@@ -1,4 +1,4 @@
-# DApp-Loto
+# DApp-Lotto
 Decentralized Lottery
 
 First try to create Decentralized Lotto from scratch.
