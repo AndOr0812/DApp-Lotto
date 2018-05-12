@@ -1,0 +1,12 @@
+a {
+    font-size: 14px;
+    text-decoration: none;
+    line-height: 18px;
+    color: #FFFFFF;
+    display: inline-block;
+    transition: 0.4s;
+    margin: 0 7px;
+}
+a:focus, a:hover {
+    color: #00F082;
+}

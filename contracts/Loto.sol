@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.23;
 
 //import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
 import "./oraclizeAPI.sol";
@@ -6,43 +6,44 @@ import "./oraclizeAPI.sol";
 
 
 contract Loto is usingOraclize {
-    uint price = 50 finney;
-    uint256 minUsers = 100;
-
-    address private escrow;
-    address public owner;
-    mapping(uint256 => address) public tickets;
-    uint256 public ticketsN = 0;
-    mapping(address => bool) public rewardClaimable;
-    uint private reward;
-    //uint private jackpot;
+    uint constant price = 50 finney;
+    uint256 constant gas = 500000;
 
     enum RoundState {noGame, roundStarted, timerStarted}
+    //---STORAGE---//
+    address private escrow;
+    address public owner;
+
+    mapping(uint256 => address) public tickets;
+    uint256 public ticketsN = 0;
+
+    mapping(address => bool) public rewardClaimable;
+    uint private reward;
+    uint256 public winnerN;
+    //uint private jackpot;
+
     RoundState public currentState;
 
-    uint256 public winnerN;
     bytes32 public oraclizeID;
 
-    uint256 gas = 500000;
 
     modifier ownerOnly {
         if (msg.sender != owner) 
         revert();
         _;
     }
-    //DEPRECATE
+    //---EVENTS---//
     event RoundStarted(uint256 closingBlock);
+    event WinnerPicked(address winner);
 
-    function Loto(address escrow_) public {
+    constructor(address _escrow) public {
         owner = msg.sender;
         currentState = RoundState.noGame;
-        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
-        escrow = escrow_;
+        OAR = OraclizeAddrResolverI(0x5dc1E82631a4BE896333F38a8214554326C11796);
+        escrow = _escrow;
     }
 
     function roundStart() public ownerOnly {
-        //DEPRECATE THE F EVENT
-        //RoundStarted(block.number + ROUND_LENGTH);
         require(currentState == RoundState.noGame);
         currentState = RoundState.roundStarted;
     }
@@ -51,19 +52,19 @@ contract Loto is usingOraclize {
     function EnterRound() payable public {
         require(msg.value >= price);
         require(currentState != RoundState.noGame);
-            if (ticketsN <= 1000) {
-                ticketsN++;
-                tickets[ticketsN] = msg.sender;
-                escrow.transfer((msg.value * 10)/100);
-            } else {
-                ticketsN++;
-                tickets[ticketsN] = msg.sender;
-                escrow.transfer(msg.value);
-                //event maxUserReached(...);
-            }
-            if(ticketsN == 3) {
-                setTimer();
-            }
+        if (ticketsN <= 1000) {
+            ticketsN++;
+            tickets[ticketsN] = msg.sender;
+            escrow.transfer((msg.value * 10)/100);
+        } else {
+            ticketsN++;
+            tickets[ticketsN] = msg.sender;
+            escrow.transfer(msg.value);
+            //event maxUserReached(...);
+        }
+        if(ticketsN == 3) {
+            setTimer();
+        }
     }
 
     function getWin() private {
@@ -79,9 +80,11 @@ contract Loto is usingOraclize {
             getWin();
         } else {
             winnerN = parseInt(_result);
-            rewardClaimable[tickets[winnerN]] = true;
+            address winner = tickets[winnerN];
+            rewardClaimable[winner] = true;
             //10% - escrow, 2% - ours
             reward = ticketsN * 44 finney;
+            emit WinnerPicked(winner);
         }
     }
 
@@ -99,15 +102,15 @@ contract Loto is usingOraclize {
         msg.sender.transfer(reward);
     }
 
-    //You don't need it, there're public accessors, just for UI sake
-    function get(uint256 tick) constant public returns (uint,uint256,address) {
-        return (price,ticketsN,tickets[tick]);
+    //Just for UI sake
+    function get(uint256 _ticket) public view returns (uint,uint256,address) {
+        return (price,ticketsN,tickets[_ticket]);
     }
 
-    function selfDestruct() ownerOnly {
+    function selfDestruct() public ownerOnly {
         selfdestruct(owner);
     }
 
-    function () payable {    
+    function () public payable {    
     }
 }

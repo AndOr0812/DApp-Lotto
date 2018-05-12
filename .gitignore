@@ -5,6 +5,7 @@
 
 # testing
 /coverage
+/contracts/LotoFactory.sol
 
 # production
 /build

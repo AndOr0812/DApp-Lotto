@@ -3,9 +3,9 @@ import logo from './logo.svg';
 import getWeb3 from './getWeb3'
 import { default as contract } from 'truffle-contract'
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Admin from './Admin';
-import User from './User';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Admin from './components/Admin';
+import User from './components/User';
 
 
 import loto_artifacts from './Loto.json'
@@ -76,23 +76,25 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to first install of our Dapp Lotto!</h1>
-        </header>
         <Router>
           <div>
-          <Route exact path="/" component={User} />
-          <Route exact path="/admin" component={Admin} />
+            <header className="App-header">
+              <img src={logo} className="App-logo" alt="logo" />
+              <h1 className="App-title">Welcome to first install of our Dapp Lotto!</h1>
+              <Link to="/admin">Admin</Link>
+              <Link to="/">Market List</Link>
+            </header>
+            <Route exact path="/" component={User} />
+            <Route exact path="/admin" component={Admin} />
           </div>
         </Router>
         <div id="Stats">
-        <span className="left">Number of users</span>
-        <span className="right">Is timer started?</span>
+          <span className="left">Number of users</span>
+          <span className="right">Is timer started?</span>
         </div>
         <div  id="Nums">
-        <span className="left">{this.state.ticketsN}</span>
-        <span className="right">{this.state.timer ? 'Yes' : 'No'}</span>
+          <span className="left">{this.state.ticketsN}</span>
+          <span className="right">{this.state.timer ? 'Yes' : 'No'}</span>
         </div>
       </div>
     );
